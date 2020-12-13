@@ -6,17 +6,24 @@ import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionAdvice;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ResponseAdvice;
 import org.lushen.mrh.cloud.feign.client.FeignClientErrorDecoder;
 import org.lushen.mrh.cloud.feign.client.FeignClientRequestInterceptor;
+import org.lushen.mrh.cloud.feign.client.FeignHystrixErrorDecoder;
+import org.lushen.mrh.cloud.feign.plugin.HystrixBadRequestExceptionPlugin;
+import org.lushen.mrh.cloud.feign.plugin.HystrixRuntimeExceptionPlugin;
+import org.lushen.mrh.cloud.feign.plugin.HystrixTimeoutExceptionPlugin;
 import org.lushen.mrh.cloud.feign.server.FeignServerExceptionAdvice;
 import org.lushen.mrh.cloud.feign.server.FeignServerResponseAdvice;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
+import feign.hystrix.HystrixFeign;
 
 /**
  * open-feign 自动配置
@@ -78,11 +85,44 @@ public class FeignAutoConfiguration {
 		 * 注册请求异常解码器
 		 */
 		@Bean
-		@Order(-1)
 		@ConditionalOnMissingBean(ErrorDecoder.class)
 		public ErrorDecoder feignClientErrorDecoder() {
 			log.info(String.format("Initialize bean %s.", FeignClientErrorDecoder.class));
 			return new FeignClientErrorDecoder();
+		}
+
+	}
+
+	/**
+	 * open-feign hystrix 配置
+	 * 
+	 * @author hlm
+	 */
+	@Configuration(proxyBeanMethods=false)
+	@ConditionalOnBean(HystrixFeign.Builder.class)
+	public class FeignHystrixAutoConfiguration {
+
+		@Bean
+		@Order(Ordered.HIGHEST_PRECEDENCE)
+		@ConditionalOnMissingBean(ErrorDecoder.class)
+		public ErrorDecoder feignHystrixErrorDecoder() {
+			log.info(String.format("Initialize bean %s.", FeignHystrixErrorDecoder.class));
+			return new FeignHystrixErrorDecoder();
+		}
+
+		@Bean
+		public HystrixBadRequestExceptionPlugin hystrixBadRequestExceptionPlugin() {
+			return new HystrixBadRequestExceptionPlugin();
+		}
+
+		@Bean
+		public HystrixRuntimeExceptionPlugin hystrixRuntimeExceptionPlugin() {
+			return new HystrixRuntimeExceptionPlugin();
+		}
+
+		@Bean
+		public HystrixTimeoutExceptionPlugin hystrixTimeoutExceptionPlugin() {
+			return new HystrixTimeoutExceptionPlugin();
 		}
 
 	}

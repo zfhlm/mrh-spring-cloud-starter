@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.cloud.discovery.DiscoveryMetadataConfigurer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -17,6 +19,8 @@ import org.springframework.cloud.zookeeper.discovery.ZookeeperDiscoveryPropertie
  * @author hlm
  */
 public class ZookeeperDiscoveryMetadataCustomizer implements BeanPostProcessor {
+
+	private final Log log = LogFactory.getLog(ZookeeperDiscoveryMetadataCustomizer.class);
 
 	private List<DiscoveryMetadataConfigurer> configurers;
 
@@ -39,6 +43,9 @@ public class ZookeeperDiscoveryMetadataCustomizer implements BeanPostProcessor {
 			for(DiscoveryMetadataConfigurer configurer : this.configurers) {
 				Map<String, String> registry = new LinkedHashMap<String, String>();
 				configurer.addMetadatas(registry);
+				if( ! registry.isEmpty() ) {
+					log.info("AutoRegister zookeeper discovery metadatas : " + registry);
+				}
 				metadatas.putAll(metadatas);
 			}
 

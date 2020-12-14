@@ -22,7 +22,6 @@ import de.codecentric.boot.admin.server.config.AdminServerMarkerConfiguration;
  * @author hlm
  */
 @Configuration(proxyBeanMethods=false)
-@ConditionalOnBean(AdminServerMarkerConfiguration.Marker.class)
 @ConditionalOnDiscoveryEnabled
 public class BootAdminAutoConfiguration {
 
@@ -31,21 +30,22 @@ public class BootAdminAutoConfiguration {
 	public static final String DISCOVERY_META_DATA_CONTEXT_PATH = "context-path";
 
 	@Bean
-	@ConditionalOnMissingBean(ServiceInstanceConverter.class)
-	public ServiceInstanceConverter bootAdminServiceInstanceConverter() {
-		log.info("Initialize spring-boot-admin service-instance-converter.");
-		return new BootAdminServiceInstanceConverter();
+	@ConditionalOnBean(ServerProperties.class)
+	public DiscoveryMetadataConfigurer contextPathMetadataConfigurer(@Autowired ServerProperties serverProperties) {
+		log.info("Initialize spring-boot-admin discovery metadata configurer.");
+		String contextPath = Optional.ofNullable(serverProperties.getServlet()).map(e -> e.getContextPath()).orElse("/");
+		return (registry -> registry.put(DISCOVERY_META_DATA_CONTEXT_PATH, contextPath));
 	}
 
 	@Configuration(proxyBeanMethods=false)
-	@ConditionalOnBean(ServerProperties.class)
-	public class BootAdminDiscoveryAutoConfiguration {
+	@ConditionalOnBean(AdminServerMarkerConfiguration.Marker.class)
+	public class BootAdminServerAutoConfiguration {
 
 		@Bean
-		public DiscoveryMetadataConfigurer contextPathMetadataConfigurer(@Autowired ServerProperties serverProperties) {
-			log.info("Initialize spring-boot-admin discovery metadata configurer.");
-			String contextPath = Optional.ofNullable(serverProperties.getServlet()).map(e -> e.getContextPath()).orElse("/");
-			return (registry -> registry.put(DISCOVERY_META_DATA_CONTEXT_PATH, contextPath));
+		@ConditionalOnMissingBean(ServiceInstanceConverter.class)
+		public ServiceInstanceConverter bootAdminServiceInstanceConverter() {
+			log.info("Initialize spring-boot-admin service-instance-converter.");
+			return new BootAdminServiceInstanceConverter();
 		}
 
 	}

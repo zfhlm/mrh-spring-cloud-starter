@@ -23,7 +23,7 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 
 /**
- * open-feign 客户端请求拦截器
+ * feign 客户端请求拦截器
  * 
  * @author hlm
  */

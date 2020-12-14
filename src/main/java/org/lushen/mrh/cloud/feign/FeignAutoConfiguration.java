@@ -26,7 +26,7 @@ import feign.codec.ErrorDecoder;
 import feign.hystrix.HystrixFeign;
 
 /**
- * open-feign 自动配置
+ * feign 自动配置
  * 
  * @author hlm
  */
@@ -37,7 +37,7 @@ public class FeignAutoConfiguration {
 	private final Log log = LogFactory.getLog(getClass());
 
 	/**
-	 * open-feign 服务端配置
+	 * feign 服务端配置
 	 * 
 	 * @author hlm
 	 */
@@ -65,7 +65,7 @@ public class FeignAutoConfiguration {
 	}
 
 	/**
-	 * open-feign 客户端配置
+	 * feign 客户端配置
 	 * 
 	 * @author hlm
 	 */
@@ -94,7 +94,7 @@ public class FeignAutoConfiguration {
 	}
 
 	/**
-	 * open-feign hystrix 配置
+	 * feign hystrix 配置
 	 * 
 	 * @author hlm
 	 */

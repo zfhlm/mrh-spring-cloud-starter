@@ -16,7 +16,7 @@ import feign.RetryableException;
 import feign.codec.ErrorDecoder;
 
 /**
- * open-feign 客户端异常解码器
+ * feign 客户端异常解码器
  * 
  * @author hlm
  */

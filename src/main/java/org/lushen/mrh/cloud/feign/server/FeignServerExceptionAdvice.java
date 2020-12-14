@@ -23,7 +23,7 @@ import org.springframework.http.ResponseEntity;
 import feign.Request.HttpMethod;
 
 /**
- * open-feign 异常处理切面
+ * feign 异常处理切面
  * 
  * @author hlm
  */

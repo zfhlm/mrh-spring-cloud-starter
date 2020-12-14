@@ -13,7 +13,7 @@ import feign.Response;
 import feign.codec.ErrorDecoder;
 
 /**
- * open-feign hystrix 客户端异常解码器
+ * feign hystrix 客户端异常解码器
  * 
  * @author hlm
  */
@@ -54,6 +54,16 @@ public class FeignHystrixErrorDecoder extends ErrorDecoder.Default {
 
 		public FeignErrorBody getFeignErrorBody() {
 			return feignErrorBody;
+		}
+
+		@Override
+		public String getMessage() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("Feign hystrix bad request, message: ");
+			builder.append(super.getMessage());
+			builder.append(", body: ");
+			builder.append(this.feignErrorBody);
+			return builder.toString();
 		}
 
 	}

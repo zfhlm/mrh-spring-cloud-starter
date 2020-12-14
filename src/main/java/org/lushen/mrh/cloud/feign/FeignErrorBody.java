@@ -1,9 +1,11 @@
 package org.lushen.mrh.cloud.feign;
 
+import java.util.Arrays;
+
 import feign.Request.HttpMethod;
 
 /**
- * open-feign 调用服务异常信息
+ * feign 调用服务异常信息
  * 
  * @author hlm
  */
@@ -59,6 +61,23 @@ public class FeignErrorBody {
 		this.error = error;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[serviceId=");
+		builder.append(serviceId);
+		builder.append(", method=");
+		builder.append(method);
+		builder.append(", requestPath=");
+		builder.append(requestPath);
+		builder.append(", requestBody=");
+		builder.append(Arrays.toString(requestBody));
+		builder.append(", error=");
+		builder.append(error);
+		builder.append("]");
+		return builder.toString();
+	}
+
 	public static class Error {
 
 		private int errcode;		// 业务错误码
@@ -89,6 +108,19 @@ public class FeignErrorBody {
 
 		public void setPayload(Object payload) {
 			this.payload = payload;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("{errcode=");
+			builder.append(errcode);
+			builder.append(", errmsg=");
+			builder.append(errmsg);
+			builder.append(", payload=");
+			builder.append(payload);
+			builder.append("}");
+			return builder.toString();
 		}
 
 	}

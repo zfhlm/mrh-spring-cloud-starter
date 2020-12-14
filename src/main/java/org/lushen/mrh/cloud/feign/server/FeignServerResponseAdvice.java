@@ -10,7 +10,7 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 
 /**
- * open-feign 服务响应body切面
+ * feign 服务响应body切面
  * 
  * @author hlm
  */

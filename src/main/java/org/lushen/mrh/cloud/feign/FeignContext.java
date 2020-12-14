@@ -13,7 +13,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
 /**
- * open-feign 请求上下文
+ * feign 请求上下文
  * 
  * @author hlm
  */

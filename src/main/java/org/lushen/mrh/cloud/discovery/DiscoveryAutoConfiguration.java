@@ -1,7 +1,12 @@
 package org.lushen.mrh.cloud.discovery;
 
-import org.lushen.mrh.cloud.discovery.processor.ConsulCustomizerProcessor;
-import org.lushen.mrh.cloud.discovery.processor.ZookeeperCustomizerProcessor;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.lushen.mrh.cloud.discovery.customizer.ConsulDiscoveryMetadataCustomizer;
+import org.lushen.mrh.cloud.discovery.customizer.ZookeeperDiscoveryMetadataCustomizer;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ConditionalOnDiscoveryEnabled;
 import org.springframework.cloud.consul.discovery.ConditionalOnConsulDiscoveryEnabled;
 import org.springframework.cloud.zookeeper.discovery.ConditionalOnZookeeperDiscoveryEnabled;
@@ -22,8 +27,10 @@ public class DiscoveryAutoConfiguration {
 	public static class ZookeeperDiscoveryAutoConfiguration {
 
 		@Bean
-		public ZookeeperCustomizerProcessor zookeeperCustomizerProcessor() {
-			return new ZookeeperCustomizerProcessor();
+		public ZookeeperDiscoveryMetadataCustomizer zookeeperDiscoveryMetadataCustomizer(
+				@Autowired ObjectProvider<DiscoveryMetadataConfigurer> objectProvider) {
+			List<DiscoveryMetadataConfigurer> configurers = objectProvider.orderedStream().collect(Collectors.toList());
+			return new ZookeeperDiscoveryMetadataCustomizer(configurers);
 		}
 
 	}
@@ -33,8 +40,10 @@ public class DiscoveryAutoConfiguration {
 	public static class ConsulDiscoveryAutoConfiguration {
 
 		@Bean
-		public ConsulCustomizerProcessor consulCustomizerProcessor() {
-			return new ConsulCustomizerProcessor();
+		public ConsulDiscoveryMetadataCustomizer consulDiscoveryMetadataCustomizer(
+				@Autowired ObjectProvider<DiscoveryMetadataConfigurer> objectProvider) {
+			List<DiscoveryMetadataConfigurer> configurers = objectProvider.orderedStream().collect(Collectors.toList());
+			return new ConsulDiscoveryMetadataCustomizer(configurers);
 		}
 
 	}

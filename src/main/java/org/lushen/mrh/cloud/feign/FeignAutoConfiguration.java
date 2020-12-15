@@ -8,6 +8,7 @@ import org.lushen.mrh.cloud.feign.client.FeignClientErrorDecoder;
 import org.lushen.mrh.cloud.feign.client.FeignClientRequestInterceptor;
 import org.lushen.mrh.cloud.feign.client.FeignHystrixConcurrencyStrategy;
 import org.lushen.mrh.cloud.feign.client.FeignHystrixErrorDecoder;
+import org.lushen.mrh.cloud.feign.fallback.ICommandKeySetterFactory;
 import org.lushen.mrh.cloud.feign.plugin.HystrixBadRequestExceptionPlugin;
 import org.lushen.mrh.cloud.feign.plugin.HystrixRuntimeExceptionPlugin;
 import org.lushen.mrh.cloud.feign.plugin.HystrixTimeoutExceptionPlugin;
@@ -130,6 +131,12 @@ public class FeignAutoConfiguration {
 				log.error(String.format("Fail to register feign hystrix concurrency strategy bean %s.", FeignHystrixConcurrencyStrategy.class));
 				throw e;
 			}
+		}
+
+		@Bean
+		public ICommandKeySetterFactory iCommandKeySetterFactory() {
+			log.info(String.format("Initialize bean %s.", ICommandKeySetterFactory.class));
+			return new ICommandKeySetterFactory();
 		}
 
 		@Bean

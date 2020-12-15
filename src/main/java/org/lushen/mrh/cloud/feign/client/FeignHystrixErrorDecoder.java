@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import org.lushen.mrh.cloud.feign.FeignErrorBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.hystrix.exception.HystrixBadRequestException;
@@ -17,10 +18,15 @@ import feign.codec.ErrorDecoder;
  * 
  * @author hlm
  */
-public class FeignHystrixErrorDecoder extends ErrorDecoder.Default {
+public class FeignHystrixErrorDecoder extends ErrorDecoder.Default implements Ordered {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Override
+	public int getOrder() {
+		return 0;
+	}
 
 	@Override
 	public Exception decode(String methodKey, Response response) {

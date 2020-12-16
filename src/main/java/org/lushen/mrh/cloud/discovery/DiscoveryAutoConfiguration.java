@@ -6,14 +6,18 @@ import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.cloud.discovery.customizer.ConsulDiscoveryMetadataCustomizer;
+import org.lushen.mrh.cloud.discovery.customizer.EurekaDiscoveryMetadataCustomizer;
 import org.lushen.mrh.cloud.discovery.customizer.ZookeeperDiscoveryMetadataCustomizer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.client.ConditionalOnDiscoveryEnabled;
 import org.springframework.cloud.consul.discovery.ConditionalOnConsulDiscoveryEnabled;
 import org.springframework.cloud.zookeeper.discovery.ConditionalOnZookeeperDiscoveryEnabled;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.netflix.discovery.EurekaClientConfig;
 
 /**
  * discovery 自动配置
@@ -50,6 +54,20 @@ public class DiscoveryAutoConfiguration {
 			log.info(String.format("Initialize bean %s.", ConsulDiscoveryMetadataCustomizer.class));
 			List<DiscoveryMetadataConfigurer> configurers = objectProvider.orderedStream().collect(Collectors.toList());
 			return new ConsulDiscoveryMetadataCustomizer(configurers);
+		}
+
+	}
+
+	@Configuration(proxyBeanMethods=false)
+	@ConditionalOnClass(EurekaClientConfig.class)
+	public class EurekaDiscoveryAutoConfiguration {
+
+		@Bean
+		public EurekaDiscoveryMetadataCustomizer eurekaDiscoveryMetadataCustomizer(
+				@Autowired ObjectProvider<DiscoveryMetadataConfigurer> objectProvider) {
+			log.info(String.format("Initialize bean %s.", EurekaDiscoveryMetadataCustomizer.class));
+			List<DiscoveryMetadataConfigurer> configurers = objectProvider.orderedStream().collect(Collectors.toList());
+			return new EurekaDiscoveryMetadataCustomizer(configurers);
 		}
 
 	}

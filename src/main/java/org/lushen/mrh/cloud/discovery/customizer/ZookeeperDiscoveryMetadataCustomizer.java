@@ -45,8 +45,8 @@ public class ZookeeperDiscoveryMetadataCustomizer implements BeanPostProcessor {
 				configurer.addMetadatas(registry);
 				if( ! registry.isEmpty() ) {
 					log.info("AutoRegister zookeeper discovery metadatas : " + registry);
+					metadatas.putAll(metadatas);
 				}
-				metadatas.putAll(metadatas);
 			}
 
 			properties.setMetadata(metadatas);

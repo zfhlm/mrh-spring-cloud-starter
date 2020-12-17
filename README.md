@@ -1,8 +1,8 @@
-## mrh-spring-cloud-starter
+# mrh-spring-cloud-starter
 
 	自定义 spring cloud 微服务组件，基于 spring cloud 微服务组件进行扩展
 
-#### spring-cloud-config-server 微服务配置中心
+### spring-cloud-config-server 微服务配置中心
 
 	配置中心不同配置文件，存在相同的配置项时配置繁琐，或者拆分之后客户端读取远程配置需要指定多个profiles
 	
@@ -103,11 +103,31 @@
 		 
 		②，具体其他实现可以参考 org.lushen.mrh.cloud.config.ConfigLocationsEnvironmentProcessor
 
-#### spring-cloud-discovery 微服务注册发现
+### spring-cloud-discovery 微服务注册发现
 
+	微服务注册发现行为扩展.
 	
+	改变微服务注册信息，例如往注册信息自动添加 metadatas：
+	
+		①，实现 configurer 接口并配置为 bean：
+		
+			org.lushen.mrh.cloud.discovery.DiscoveryMetadataConfigurer
+		
+		②，编写服务注册信息变更 customizer，目前只实现了 eureka、zookeeper、consul 注册中心 customizer：
+		
+			org.lushen.mrh.cloud.discovery.customizer.ConsulDiscoveryMetadataCustomizer
+			
+			org.lushen.mrh.cloud.discovery.customizer.EurekaDiscoveryMetadataCustomizer
+			
+			org.lushen.mrh.cloud.discovery.customizer.ZookeeperDiscoveryMetadataCustomizer
+		
+		③，如果需要其他注册中心支持，请参考以上三个实现编写相关实现
+	
+	微服务灰度发布：
+	
+		(待完善)
 
-#### spring-boot-admin 微服务监控
+### spring-boot-admin 微服务监控
 
 	微服务监控 spring-boot-admin 存在 context-path 不是根路径，会导致 actuator 监控失败。
 	
@@ -127,7 +147,9 @@
 		
 		org.lushen.mrh.cloud.admin.BootAdminAutoConfiguration
 
-#### spring-cloud-openfeign 微服务远程调用
+### spring-cloud-gateway 微服务网关
+
+### spring-cloud-openfeign 微服务远程调用
 
 	
 

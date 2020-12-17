@@ -2,7 +2,7 @@
 
 	自定义 spring cloud 微服务组件，基于 spring cloud 微服务组件进行扩展
 
-##### spring-cloud-config-server 微服务配置中心
+#### spring-cloud-config-server 微服务配置中心
 
 	配置中心不同配置文件，存在相同的配置项时配置繁琐，或者拆分之后客户端读取远程配置需要指定多个profiles
 	
@@ -103,11 +103,11 @@
 		 
 		②，具体其他实现可以参考 org.lushen.mrh.cloud.config.ConfigLocationsEnvironmentProcessor
 
-##### spring-cloud-discovery 微服务注册发现
+#### spring-cloud-discovery 微服务注册发现
 
 	
 
-##### spring-boot-admin 微服务监控
+#### spring-boot-admin 微服务监控
 
 	微服务监控 spring-boot-admin 存在 context-path 不是根路径，会导致 actuator 监控失败。
 	
@@ -127,7 +127,7 @@
 		
 		org.lushen.mrh.cloud.admin.BootAdminAutoConfiguration
 
-##### spring-cloud-openfeign 微服务远程调用
+#### spring-cloud-openfeign 微服务远程调用
 
 	
 

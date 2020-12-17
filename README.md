@@ -1,47 +1,123 @@
-##### 自定义 spring-cloud-starter 组件
+##### mrh-spring-cloud-starter
 
-	mrh-spring-cloud-starter
+	自定义 spring cloud 微服务组件，基于 spring cloud 微服务组件进行扩展
 
-##### 简单介绍
+##### spring-cloud-config-server 配置中心
 
-	①，对 spring-boot-admin 进行扩展：
+	配置中心不同配置文件，存在相同的配置项时配置繁琐，或者拆分之后客户端读取远程配置需要指定多个profiles
 	
-		1，解决存在 context-path 服务监控失败问题
+	配置中心通常的启用步骤，以本地资源的方式为例：
 	
-	②，对 spring-cloud-discovery 进行扩展：
+		①，maven主要依赖配置：
+		
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-web</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-config-server</artifactId>
+			</dependency>
+		
+		②，编写启动类：
+		
+			@SpringBootApplication
+			@EnabledConfigServer
+			public class ConfigServerStarter {
+				public static void main(String[] args) {
+					SpringApplication.run(ConfigServerStarter.class, args);
+				}
+			}
+		
+		③，配置文件 bootstrap.properties 配置：
+		
+			server.port=8888
+			server.context-path=/
+			spring.application.name=service-config
+			spring.profiles.active=native
+			spring.cloud.config.server.native.search-locations=classpath:/config
+			
+		④，放置配置文件 src/main/resources 目录：
+		
+			-- config
+			   -- service-user-dev.properties
+			   -- service-order-dev.properties
+			   -- service-gateway-dev.properties
+		
+	基于配置中心加载文件方式，对资源查询织入后置处理切面，相关接口和切面：
 	
-		1，注册元信息 metadata 自动注入
+		org.springframework.cloud.config.server.environment.EnvironmentRepository
 		
-		2，灰度发布
+		org.springframework.cloud.config.environment.Environment
+		
+		org.lushen.mrh.cloud.config.EnvronmentRepositoryBeanAdvisor
+		
+		org.lushen.mrh.cloud.config.EnvironmentProcessor
 	
-	③，对 spring-cloud-feign 进行扩展：
+	目前实现了 config-locations 功能，引入步骤：
 	
-		1，异常解码器：自定义feign调用异常处理
+		①，配置中心必须存在以下依赖：
 		
-		2，请求拦截器：自定义请求头信息自动传递，自动添加标识feign调用请求头
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-aop</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.lushen.mrh</groupId>
+				<artifactId>mrh-spring-cloud-starter</artifactId>
+			</dependency>
 		
-		3，响应切面：根据是否feign调用，对响应内容进行不同的处理逻辑
+		②，假设存在以下两个配置文件：
 		
-		4，异常切面：根据是否feign调用，对异常进行不同的处理逻辑
+			service-user-dev.properties
+			service-order-dev.properties
 		
-		5，异常解码器(hystrix)：自定义feign开启hystrix之后调用异常处理，以及自定义异常插件
+		③，都存在相同的配置，可以将相同配置提取为单独文件，例如：
 		
-	④，对 spring-cloud-gateway 进行扩展：
+			service-database-dev.properties
+			service-redis-dev.properties
 		
-		1，请求响应内容日志filter
+		④，删除原来配置文件中的数据库相关配置，并在配置文件中加入以下配置引入公共配置：
 		
-		2，自定义请求头清理filter
+			config-locations[0]=service-database-dev
+			config-locations[1]=service-redis-dev
 		
-		3，登录处理filter
+	如果需要扩展，可以实现接口 org.lushen.mrh.cloud.config.EnvironmentProcessor 并配置为配置中心 bean：
 		
-		4，鉴权处理filter
+		①，例如想实现简单的打印配置功能：
 		
-	⑤，对 spring-cloud-bus 进行扩展：
+			public class PrintEnvironmentProcessor implements EnvironmentProcessor {
+				
+				@Override
+				public Environment process(EnvironmentRepository repository, Environment environment) {
+					System.out.println(environment);
+					return environment;
+				}
+			
+			}
+			
+			@Bean
+			public PrintEnvironmentProcessor printEnvironmentProcessor() {
+				return new PrintEnvironmentProcessor();
+			}
+		 
+		②，具体其他实现可以参考 org.lushen.mrh.cloud.config.ConfigLocationsEnvironmentProcessor
+
+##### spring-boot-admin 微服务监控
+
 	
-		1，自定义 bus 事件
-		
-	
-	
-	
-		
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

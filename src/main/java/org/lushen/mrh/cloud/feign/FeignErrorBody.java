@@ -2,7 +2,7 @@ package org.lushen.mrh.cloud.feign;
 
 import java.util.Arrays;
 
-import feign.Request.HttpMethod;
+import org.springframework.http.HttpMethod;
 
 /**
  * feign 调用服务异常信息

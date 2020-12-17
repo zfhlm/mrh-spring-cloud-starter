@@ -16,11 +16,10 @@ import org.lushen.mrh.cloud.feign.FeignErrorBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
-import feign.Request.HttpMethod;
 
 /**
  * feign 异常处理切面

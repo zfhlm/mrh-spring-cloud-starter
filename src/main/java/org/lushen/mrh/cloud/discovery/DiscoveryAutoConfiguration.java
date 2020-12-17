@@ -10,14 +10,17 @@ import org.lushen.mrh.cloud.discovery.customizer.EurekaDiscoveryMetadataCustomiz
 import org.lushen.mrh.cloud.discovery.customizer.ZookeeperDiscoveryMetadataCustomizer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.client.ConditionalOnDiscoveryEnabled;
-import org.springframework.cloud.consul.discovery.ConditionalOnConsulDiscoveryEnabled;
-import org.springframework.cloud.zookeeper.discovery.ConditionalOnZookeeperDiscoveryEnabled;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.consul.ConditionalOnConsulEnabled;
+import org.springframework.cloud.consul.ConsulProperties;
+import org.springframework.cloud.netflix.eureka.EurekaClientAutoConfiguration;
+import org.springframework.cloud.zookeeper.ConditionalOnZookeeperEnabled;
+import org.springframework.cloud.zookeeper.ZookeeperProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.netflix.discovery.EurekaClientConfig;
 
 /**
  * discovery 自动配置
@@ -26,12 +29,14 @@ import com.netflix.discovery.EurekaClientConfig;
  */
 @Configuration(proxyBeanMethods=false)
 @ConditionalOnDiscoveryEnabled
+@ConditionalOnClass(DiscoveryClient.class)
 public class DiscoveryAutoConfiguration {
 
 	private final Log log = LogFactory.getLog(DiscoveryAutoConfiguration.class);
 
 	@Configuration(proxyBeanMethods=false)
-	@ConditionalOnZookeeperDiscoveryEnabled
+	@ConditionalOnZookeeperEnabled
+	@ConditionalOnClass(ZookeeperProperties.class)
 	public class ZookeeperDiscoveryAutoConfiguration {
 
 		@Bean
@@ -45,7 +50,8 @@ public class DiscoveryAutoConfiguration {
 	}
 
 	@Configuration(proxyBeanMethods=false)
-	@ConditionalOnConsulDiscoveryEnabled
+	@ConditionalOnConsulEnabled
+	@ConditionalOnClass(ConsulProperties.class)
 	public class ConsulDiscoveryAutoConfiguration {
 
 		@Bean
@@ -59,7 +65,7 @@ public class DiscoveryAutoConfiguration {
 	}
 
 	@Configuration(proxyBeanMethods=false)
-	@ConditionalOnClass(EurekaClientConfig.class)
+	@ConditionalOnBean(EurekaClientAutoConfiguration.class)
 	public class EurekaDiscoveryAutoConfiguration {
 
 		@Bean

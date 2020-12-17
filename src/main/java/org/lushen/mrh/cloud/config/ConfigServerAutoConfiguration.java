@@ -7,7 +7,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.cloud.config.server.environment.EnvironmentRepository;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.cloud.config.server.config.ConfigServerConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,7 +18,8 @@ import org.springframework.context.annotation.Configuration;
  * @author hlm
  */
 @Configuration(proxyBeanMethods=false)
-@ConditionalOnBean(EnvironmentRepository.class)
+@ConditionalOnBean(ConfigServerConfiguration.class)
+@ConditionalOnClass({org.springframework.aop.Advisor.class, org.aspectj.weaver.Advice.class})
 public class ConfigServerAutoConfiguration {
 
 	private final Log log = LogFactory.getLog(getClass());

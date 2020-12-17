@@ -7,9 +7,11 @@ import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.cloud.discovery.DiscoveryMetadataConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.cloud.client.ConditionalOnDiscoveryEnabled;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,18 +25,24 @@ import de.codecentric.boot.admin.server.config.AdminServerMarkerConfiguration;
  */
 @Configuration(proxyBeanMethods=false)
 @ConditionalOnDiscoveryEnabled
+@ConditionalOnClass(DiscoveryClient.class)
 public class BootAdminAutoConfiguration {
-
-	private final Log log = LogFactory.getLog(BootAdminAutoConfiguration.class);
 
 	public static final String DISCOVERY_META_DATA_CONTEXT_PATH = "context-path";
 
-	@Bean
+	private final Log log = LogFactory.getLog(BootAdminAutoConfiguration.class);
+
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnBean(ServerProperties.class)
-	public DiscoveryMetadataConfigurer contextPathMetadataConfigurer(@Autowired ServerProperties serverProperties) {
-		log.info("Initialize spring-boot-admin discovery metadata configurer.");
-		String contextPath = Optional.ofNullable(serverProperties.getServlet()).map(e -> e.getContextPath()).orElse("/");
-		return (registry -> registry.put(DISCOVERY_META_DATA_CONTEXT_PATH, contextPath));
+	public class BootAdminClientAutoConfiguration {
+
+		@Bean
+		public DiscoveryMetadataConfigurer contextPathMetadataConfigurer(@Autowired ServerProperties serverProperties) {
+			log.info("Initialize spring-boot-admin discovery metadata configurer.");
+			String contextPath = Optional.ofNullable(serverProperties.getServlet()).map(e -> e.getContextPath()).orElse("/");
+			return (registry -> registry.put(DISCOVERY_META_DATA_CONTEXT_PATH, contextPath));
+		}
+
 	}
 
 	@Configuration(proxyBeanMethods=false)

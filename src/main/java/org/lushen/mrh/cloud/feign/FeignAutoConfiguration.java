@@ -18,8 +18,14 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.cloud.openfeign.FeignClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.plugin.core.Plugin;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.netflix.hystrix.strategy.HystrixPlugins;
 import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategy;
@@ -28,10 +34,8 @@ import com.netflix.hystrix.strategy.executionhook.HystrixCommandExecutionHook;
 import com.netflix.hystrix.strategy.metrics.HystrixMetricsPublisher;
 import com.netflix.hystrix.strategy.properties.HystrixPropertiesStrategy;
 
-import feign.Feign;
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
-import feign.hystrix.HystrixFeign;
 
 /**
  * feign 自动配置
@@ -39,7 +43,6 @@ import feign.hystrix.HystrixFeign;
  * @author hlm
  */
 @Configuration(proxyBeanMethods=false)
-@ConditionalOnClass(Feign.class)
 public class FeignAutoConfiguration {
 
 	private final Log log = LogFactory.getLog(getClass());
@@ -50,6 +53,8 @@ public class FeignAutoConfiguration {
 	 * @author hlm
 	 */
 	@Configuration(proxyBeanMethods=false)
+	@ConditionalOnWebApplication
+	@ConditionalOnClass({ResponseBodyAdvice.class, ControllerAdvice.class, Plugin.class})
 	public class FeignServerAutoConfiguration {
 
 		/**
@@ -78,6 +83,8 @@ public class FeignAutoConfiguration {
 	 * @author hlm
 	 */
 	@Configuration(proxyBeanMethods=false)
+	@ConditionalOnClass(Plugin.class)
+	@ConditionalOnBean(FeignClientProperties.class)
 	public class FeignClientAutoConfiguration {
 
 		/**
@@ -107,7 +114,8 @@ public class FeignAutoConfiguration {
 	 * @author hlm
 	 */
 	@Configuration(proxyBeanMethods=false)
-	@ConditionalOnBean(HystrixFeign.Builder.class)
+	@ConditionalOnBean(FeignClientAutoConfiguration.class)
+	@ConditionalOnProperty(name = "feign.hystrix.enabled")
 	public class FeignHystrixAutoConfiguration implements InitializingBean {
 
 		@Override

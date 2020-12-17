@@ -4,6 +4,8 @@
 
 ### 微服务配置中心
 
+	spring-cloud-config 扩展.
+	
 	基于配置中心加载文件方式，对资源查询织入后置处理切面，可以通过 config-locations 包含其他配置文件的配置信息：
 	
 		①，配置中心主要依赖：
@@ -62,7 +64,9 @@
 
 ### 微服务注册发现
 
-	改变微服务注册信息 metadatas：
+	spring-cloud-discovery 扩展.
+	
+	微服务注册信息 metadatas 前置处理：
 	
 		①，实现接口并添加为bean：
 		
@@ -84,17 +88,26 @@
 
 ### 微服务监控
 
-	微服务监控 spring-boot-admin 存在 context-path 非根路径监控失败问题.
+	spring-boot-admin 扩展.
 	
-	基于(#微服务注册发现)扩展实现：
+	处理微服务监控存在 context-path 非根路径导致监控失败问题 ：
 		
-		①，服务注册时，获取上下文 context-path信息，添加到注册信息 metadatas
+		①，监控服务和业务服务引入依赖：
 		
-		②，服务发现时，解析注册信息 metadatas 中的  context-path，重写监控url地址
+			<dependency>
+				<groupId>org.lushen.mrh</groupId>
+				<artifactId>mrh-spring-cloud-starter</artifactId>
+			</dependency>
+		
+		②，基于(#微服务注册发现)注册信息 metadatas 前置处理，服务注册时，获取上下文 context-path信息，自动添加到注册信息 metadatas
+		
+		③，服务发现时，自动解析注册信息 metadatas 中的  context-path，并重写监控url地址
 
 ### 微服务网关
 
-	自定义过滤器.
+	spring-cloud-gateway 扩展.
+	
+	自定义过滤器：
 	
 		①，清除http请求 Request-Deliver-* 请求头过滤器：
 	
@@ -118,7 +131,7 @@
 
 ### 微服务调用
 
-	
+	spring-cloud-openfeign 扩展.
 
 
 

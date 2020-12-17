@@ -1,4 +1,4 @@
-##### mrh-spring-cloud-starter
+### mrh-spring-cloud-starter
 
 	自定义 spring cloud 微服务组件，基于 spring cloud 微服务组件进行扩展
 
@@ -77,7 +77,7 @@
 			service-database-dev.properties
 			service-redis-dev.properties
 		
-		④，删除原来配置文件中的数据库相关配置，并在配置文件中加入以下配置引入公共配置：
+		④，删除原来配置文件中的相同配置，并在配置文件中加入以下配置引入公共配置：
 		
 			config-locations[0]=service-database-dev
 			config-locations[1]=service-redis-dev

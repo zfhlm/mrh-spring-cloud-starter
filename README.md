@@ -2,7 +2,7 @@
 
 	自定义 spring cloud 微服务组件，基于 spring cloud 微服务组件进行扩展
 
-##### spring-cloud-config-server 配置中心
+##### spring-cloud-config-server 微服务配置中心
 
 	配置中心不同配置文件，存在相同的配置项时配置繁琐，或者拆分之后客户端读取远程配置需要指定多个profiles
 	
@@ -103,12 +103,33 @@
 		 
 		②，具体其他实现可以参考 org.lushen.mrh.cloud.config.ConfigLocationsEnvironmentProcessor
 
-##### spring-boot-admin 微服务监控
+##### spring-cloud-discovery 微服务注册发现
 
 	
 
+##### spring-boot-admin 微服务监控
 
+	微服务监控 spring-boot-admin 存在 context-path 不是根路径，会导致 actuator 监控失败。
+	
+	当前组件扩展了 spring-boot-admin 服务和 spring-cloud 服务注册和查找方式：
+		
+		①，服务注册时，获取上下文 context-path信息，添加到注册信息 metadatas 中，实现接口：
+		
+			org.lushen.mrh.cloud.discovery.DiscoveryMetadataConfigurer
+		
+		②，服务发现时，解析注册信息 metadatas 中的  context-path，重写监控url地址，实现接口：
+		
+			de.codecentric.boot.admin.server.cloud.discovery.ServiceInstanceConverter
+		
+	具体可查看实现类：
+	
+		org.lushen.mrh.cloud.admin.BootAdminServiceInstanceConverter
+		
+		org.lushen.mrh.cloud.admin.BootAdminAutoConfiguration
 
+##### spring-cloud-openfeign 微服务远程调用
+
+	
 
 
 

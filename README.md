@@ -86,15 +86,37 @@
 
 	微服务监控 spring-boot-admin 存在 context-path 非根路径监控失败问题.
 	
-	基于微服务注册发现扩展实现：
+	基于(#微服务注册发现)扩展实现：
 		
 		①，服务注册时，获取上下文 context-path信息，添加到注册信息 metadatas
 		
 		②，服务发现时，解析注册信息 metadatas 中的  context-path，重写监控url地址
 
-### spring-cloud-gateway 微服务网关
+### 微服务网关
 
-### spring-cloud-openfeign 微服务远程调用
+	自定义过滤器.
+	
+		①，清除http请求 Request-Deliver-* 请求头过滤器：
+	
+			org.lushen.mrh.cloud.gateway.DeliverGatewayFilter
+		
+		②，请求响应信息日志打印过滤器：
+		
+			org.lushen.mrh.cloud.gateway.LoggingGatewayFilter
+		
+		③，接口白名单拦截过滤器：
+		
+			(待完善)
+		
+		④，用户登录拦截过滤器：
+		
+			(待完善)
+		
+		⑤，用户权限拦截过滤器：
+		
+			(待完善)
+
+### 微服务调用
 
 	
 

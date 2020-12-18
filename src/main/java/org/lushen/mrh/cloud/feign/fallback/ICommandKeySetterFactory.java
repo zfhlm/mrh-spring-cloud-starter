@@ -36,7 +36,7 @@ public class ICommandKeySetterFactory implements SetterFactory, BeanPostProcesso
 	@Override
 	public Setter create(Target<?> target, Method method) {
 		ICommandKey annotation = AnnotationUtils.findAnnotation(method, ICommandKey.class);
-		if(StringUtils.isNotBlank(annotation.value())) {
+		if(annotation != null && StringUtils.isNotBlank(annotation.value())) {
 			return HystrixCommand.Setter
 					.withGroupKey(HystrixCommandGroupKey.Factory.asKey(target.name()))
 					.andCommandKey(HystrixCommandKey.Factory.asKey(annotation.value()));

@@ -20,7 +20,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.cloud.openfeign.FeignClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.plugin.core.Plugin;
@@ -84,7 +83,7 @@ public class FeignAutoConfiguration {
 	 */
 	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnClass(Plugin.class)
-	@ConditionalOnBean(FeignClientProperties.class)
+	@ConditionalOnBean(org.springframework.cloud.openfeign.FeignAutoConfiguration.class)
 	public class FeignClientAutoConfiguration {
 
 		/**
@@ -114,7 +113,6 @@ public class FeignAutoConfiguration {
 	 * @author hlm
 	 */
 	@Configuration(proxyBeanMethods=false)
-	@ConditionalOnBean(FeignClientAutoConfiguration.class)
 	@ConditionalOnProperty(name = "feign.hystrix.enabled")
 	public class FeignHystrixAutoConfiguration implements InitializingBean {
 
